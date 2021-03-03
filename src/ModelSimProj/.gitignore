@@ -4,6 +4,8 @@
 # 删除后不影响编译，故添加至 .gitignore
 # (第一次编译会出错，再次编译即可)
 
+*.cr.mti
+
 _info
 _lib.qdb
 _lib1_0.qdb
