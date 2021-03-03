@@ -14,7 +14,7 @@
 `define INSTR_ADDI_OP       6'b001000
 `define INSTR_ADDIU_OP      6'b001001
 `define INSTR_ANDI_OP       6'b001100
-`define INSTR_ORI_OP        6'b001101 
+`define INSTR_ORI_OP        6'b001101
 `define INSTR_XORI_OP       6'b001110
 `define INSTR_LUI_OP        6'b001111
 `define INSTR_SLTI_OP       6'b001010
@@ -46,11 +46,11 @@
 `define INSTR_SRA_FUNCT     6'b000011
 `define INSTR_SLLV_FUNCT    6'b000100
 `define INSTR_SRLV_FUNCT    6'b000110
-`define INSTR_SRAV_FUNCT    6'b000111      
+`define INSTR_SRAV_FUNCT    6'b000111
 `define INSTR_JR_FUNCT      6'b001000
-`define INSTR_JALR_FUNCT    6'b001001     
- 
+`define INSTR_JALR_FUNCT    6'b001001
+
 `define INSTR_BGEZ_RT       5'b00001
 `define INSTR_BLTZ_RT       5'b00000
-   
+
 
