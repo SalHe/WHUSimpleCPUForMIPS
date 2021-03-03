@@ -1,0 +1,12 @@
+
+# !!!经测试
+# 以下文件为 ModelSim 编译时产生的
+# 删除后不影响编译，故添加至 .gitignore
+# (第一次编译会出错，再次编译即可)
+
+_info
+_lib.qdb
+_lib1_0.qdb
+_lib1_0.qpg
+_lib1_0.qtl
+_vmake
