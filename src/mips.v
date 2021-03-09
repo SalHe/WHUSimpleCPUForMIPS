@@ -3,7 +3,7 @@ module mips( );
 reg clk, reset;
 
 initial begin
-    $readmemh( "Test_Instr_4.txt", IM.IMem ) ;
+    $readmemh( "../../asm/Test_Instr_4.txt", IM.IMem ) ;
     $monitor("PC = 0x%8X, IR = 0x%8X", PC.oldpc, IM.Out );
 
     clk = 1 ;

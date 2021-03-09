@@ -7,8 +7,8 @@
 *.cr.mti
 
 _info
-_lib.qdb
-_lib1_0.qdb
-_lib1_0.qpg
-_lib1_0.qtl
+*.qdb
+*.qdb
+*.qpg
+*.qtl
 _vmake
