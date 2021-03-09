@@ -11,4 +11,12 @@
 
 - asm
 
-  用于存放用于测试CPU的汇编代码，可以使用[MARS](http://courses.missouristate.edu/KenVollmar/MARS/)将其编译为机器码或进行模拟。
+  用于存放用于测试CPU的汇编代码，可以使用[MARS](http://courses.missouristate.edu/KenVollmar/MARS/)(已配套在[tools](./tools)目录中)将其编译为机器码或进行模拟。
+
+- refs
+
+  用于存放相关的引用资料，比如课程所发课件，工具等。
+
+- tools
+
+  用于存放所使用到的相关工具。
