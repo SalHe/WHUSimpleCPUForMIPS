@@ -176,8 +176,25 @@ always @(opcode or func ) begin
         // TODO: jal
         // TODO: jr
         // TODO: slt
-        // TODO: slti
 
+
+        // slti 小于则置位(立即数)
+        // if (rs <(sign-extend)immediate) rt=1 else rt=0 ；
+        `INSTR_SLTI_OP: begin
+            RegDst = `REG_MUX_SEL_RT;
+            RegWrite = 1;
+            DatatoReg = `DR_MUX_SEL_ALU;
+
+            ALUSrc = `ALU_SRC_MUX_SEL_EXT; // 立即数
+            ALUCtrl = `ALUOp_SLT;
+
+            MemRead = 0;
+            MemWrite = 0;
+
+            PC_sel = `PC_MUX_SEL_NEWPC;
+
+            ExtOp = `EXT_SIGNED;
+        end
 
         default: begin
             RegDst = 2'b00;
