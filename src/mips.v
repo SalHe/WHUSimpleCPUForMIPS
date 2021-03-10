@@ -127,7 +127,7 @@ ALUSrc_mux ALUSRC(
 
 // ALU
 alu ALU(
-        /* 操作数1：寄存器Data2 */          grf_out_A,
+        /* 操作数1：寄存器Data1 */          grf_out_A,
         /* 操作数2：ALU操作数选择结果 */     ALUSrc_out,
         /* ALU控制信号 */                   ALUCtr,
         /* 运算结果 */                      ALU_out,
