@@ -12,10 +12,12 @@ module ctrl(
            output reg [1: 0] DatatoReg,
            output reg [1: 0] PC_sel,
            output reg ExtOp,
-           output reg [4: 0] ALUCtrl
+           output reg [4: 0] ALUCtrl,
+           output reg [1: 0] IsJump
        );
 
 always @(opcode or func ) begin
+    IsJump = 0;
     case (opcode)
         //addu,subu
         `INSTR_RTYPE_OP:          // R type
@@ -210,7 +212,26 @@ always @(opcode or func ) begin
         end
 
 
-        // TODO: j
+        // j
+        // PC <- (PC+4)[31..28],address[26..0],0,0
+        `INSTR_J_OP: begin
+            RegDst = 0;
+            RegWrite = 0;
+            DatatoReg = 0;
+
+            ALUSrc = 0;
+            ALUCtrl = 0;
+
+            MemRead = 0;
+            MemWrite = 0;
+
+            PC_sel = `PC_MUX_SEL_NEWPC;
+
+            ExtOp = `EXT_SIGNED;
+
+            IsJump = 1;
+        end
+
         // TODO: jal
         // TODO: jr
 

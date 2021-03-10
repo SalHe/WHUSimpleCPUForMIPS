@@ -20,6 +20,7 @@ wire [31: 0] old_PC;
 wire [31: 0] new_PC;
 
 wire beq_zero;
+wire IsJump;
 wire [1: 0] PC_sel;
 wire [31: 0] Instrl;
 
@@ -57,8 +58,10 @@ im IM(
 npc NPC(
         /* 原PC(未+4) */            old_PC,
         /* 偏移(暂时只考虑beq) */    Instrl[15:0],
+        /* JumpAddr */              Instrl[25:0],
         /* 信号 */                  beq_zero,
         /* 多路选择信号 */           PC_sel,
+        /* Jump ? */                IsJump,
         /* 输出的新PC */             new_PC
     );
 
@@ -151,7 +154,8 @@ ctrl CTRL(
          Data_to_Reg_sel,
          PC_sel,
          ExtOp,
-         ALUCtr
+         ALUCtr,
+         IsJump
      );
 
 // 内存访问模块
