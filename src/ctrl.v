@@ -132,7 +132,7 @@ always @(opcode or func ) begin
                 // 将立即数无符号扩展传给ALU
                 // ALU选取立即数中[10..6]即可拿到shamt
                 ALUSrc = `ALU_SRC_MUX_SEL_EXT;
-                ALUSrc2 = `ALU_SRC_MUX_SEL_REGB;
+                ALUSrc2 = `ALU_SRC_MUX_SEL_REGB; 
                 ALUCtrl = `ALUOp_SLL;
 
                 MemRead = 0;
