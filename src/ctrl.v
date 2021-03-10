@@ -171,7 +171,27 @@ always @(opcode or func ) begin
         // TODO: sll
         // TODO: srl
         // TODO: sra
-        // TODO: bne
+
+
+        // bne
+        // if (rs != rt) PC <- PC+4 + (sign-extend)immediate<<2 
+        `INSTR_BNE_OP: begin
+            RegDst = 0;
+            RegWrite = 0;
+            DatatoReg = 0;
+
+            ALUSrc = `ALU_SRC_MUX_SEL_REG; // 立即数
+            ALUCtrl = `ALUOp_BNE;
+
+            MemRead = 0;
+            MemWrite = 0;
+
+            PC_sel = `PC_MUX_SEL_BRANCH;
+
+            ExtOp = `EXT_SIGNED;
+        end
+
+
         // TODO: j
         // TODO: jal
         // TODO: jr

@@ -28,7 +28,8 @@ always @(A or B or ALUOp) begin
             C = A - B;
         `ALUOp_SLT:
             C = ($signed(A) < $signed(B)) ? 1'b1 : 1'b0;
-
+        `ALUOp_BNE: 
+            zero = (A != B) ? 1'b1 : 1'b0; //bne
 
     endcase
 end
