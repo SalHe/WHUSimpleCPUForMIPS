@@ -11,4 +11,5 @@ _info
 *.qdb
 *.qpg
 *.qtl
+*.wlf
 _vmake
