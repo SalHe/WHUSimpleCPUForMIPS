@@ -84,6 +84,24 @@ always @(opcode or func ) begin
 
             end
 
+            // slt
+            // if (rs < rt) rd=1 else rd=0
+            `INSTR_SLT_FUNCT: begin
+                RegDst = `REG_MUX_SEL_RT;
+                RegWrite = 1;
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                ALUSrc = `ALU_SRC_MUX_SEL_REG;
+                ALUCtrl = `ALUOp_SLT;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = `EXT_SIGNED;
+            end
+
         endcase //the end of the func
 
         //ori
@@ -174,7 +192,7 @@ always @(opcode or func ) begin
 
 
         // bne
-        // if (rs != rt) PC <- PC+4 + (sign-extend)immediate<<2 
+        // if (rs != rt) PC <- PC+4 + (sign-extend)immediate<<2
         `INSTR_BNE_OP: begin
             RegDst = 0;
             RegWrite = 0;
@@ -195,8 +213,6 @@ always @(opcode or func ) begin
         // TODO: j
         // TODO: jal
         // TODO: jr
-        // TODO: slt
-
 
         // slti 小于则置位(立即数)
         // if (rs <(sign-extend)immediate) rt=1 else rt=0 ；
