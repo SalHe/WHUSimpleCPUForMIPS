@@ -115,12 +115,25 @@ always @(opcode or func ) begin
 
         // 作业部分
 
-        // TODO: lw
+        // lw
+        `INSTR_LW_OP: begin
+            RegDst = `REG_MUX_SEL_RT;
+            RegWrite = 1;
+            DatatoReg = `DR_MUX_SEL_MEM;
 
+            ALUSrc = `ALU_SRC_MUX_SEL_EXT; // offset
+            ALUCtrl = `ALUOp_ADD; // 完成 offset + base
+
+            MemRead = 1;
+            MemWrite = 0;
+
+            PC_sel = `PC_MUX_SEL_NEWPC;
+            ExtOp = `EXT_SIGNED;
+        end
 
         // sw
         `INSTR_SW_OP: begin
-            RegDst = 0; 
+            RegDst = 0;
             RegWrite = 0;
             DatatoReg = 0;
 
