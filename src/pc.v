@@ -11,7 +11,11 @@ always@(posedge clk or posedge reset)
     //always@(posedge clk)
 begin
     if (reset)
-        _pc <= 32'h00003000;
+        // 老师给的源代码里是这样的
+        // 不知道为什么要写成h00003000
+        // _pc <= 32'h00003000;
+
+        _pc <= 32'h00000000;
     else begin
         _pc <= newpc;
     end
