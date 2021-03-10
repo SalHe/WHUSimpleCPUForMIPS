@@ -3,7 +3,8 @@ module mips( );
 reg clk, reset;
 
 initial begin
-    $readmemh( "../../asm/Test_Instr_4.txt", IM.IMem ) ;
+    // $readmemh( "../../asm/Test_Instr_4.txt", IM.IMem ) ;
+    $readmemh( "../../asm/Test_Instr.txt", IM.IMem ) ;
     $monitor("PC = 0x%8X, IR = 0x%8X", PC.oldpc, IM.Out );
 
     clk = 1 ;
@@ -95,8 +96,8 @@ gpr GRF(
         reset,
 
         // Read Addr1, Read Addr2
-        Instrl[25: 21],
-        Instrl[20: 16],
+        Instrl[25: 21], // rs
+        Instrl[20: 16], // rt
 
         // Write Addr
         Reg_rd,

@@ -51,3 +51,17 @@
 `define ME_LH  3'b010
 `define ME_LHU 3'b011
 `define ME_LW  3'b100
+
+
+// MUX
+`define REG_MUX_SEL_RT 2'b00
+`define REG_MUX_SEL_RD 2'b01
+
+`define ALU_SRC_MUX_SEL_REG 2'b00
+`define ALU_SRC_MUX_SEL_EXT 2'b01
+
+`define PC_MUX_SEL_NEWPC  2'b00
+`define PC_MUX_SEL_BRANCH 2'b01
+
+`define DR_MUX_SEL_ALU 2'b00
+`define DR_MUX_SEL_MEM 2'b01

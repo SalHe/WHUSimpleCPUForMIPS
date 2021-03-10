@@ -20,7 +20,8 @@ always @(A or B or ALUOp) begin
             C = A | B;
         `ALUOp_EQL:
             zero = (A == B) ? 1'b1 : 1'b0; //beq
-
+        `ALUOp_LUI:
+            C = B << 16;
 
 
     endcase

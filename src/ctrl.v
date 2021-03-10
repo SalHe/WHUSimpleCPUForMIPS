@@ -77,6 +77,33 @@ always @(opcode or func ) begin
             ALUCtrl = `ALUOp_EQL;
         end
 
+        // 作业部分
+
+        // lw
+        // `INSTR_LW_OP: begin
+            
+        // end
+
+        // lui 设置高位
+        `INSTR_LUI_OP: begin
+            RegDst = `REG_MUX_SEL_RT;  // 写入 rt。ins[20:16]
+            RegWrite = 1;
+            
+            ALUSrc = `ALU_SRC_MUX_SEL_EXT; // 立即数 
+            ALUCtrl = `ALUOp_LUI;
+
+            MemRead = 0;
+            MemWrite = 0;
+            
+            DatatoReg = `DR_MUX_SEL_ALU;
+            
+            PC_sel = `PC_MUX_SEL_NEWPC;
+            
+            ExtOp = `EXT_ZERO;
+        end
+
+
+
         default: begin
             RegDst = 2'b00;
             ALUSrc = 0;
