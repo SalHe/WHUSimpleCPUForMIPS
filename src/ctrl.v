@@ -79,10 +79,13 @@ always @(opcode or func ) begin
 
         // 作业部分
 
-        // lw
-        // `INSTR_LW_OP: begin
-            
-        // end
+        // TODO: lw
+        // TODO: sw
+        // TODO: add
+        // TODO: sub
+        // TODO: or
+        // TODO: and
+        // TODO: addi
 
         // lui 设置高位
         `INSTR_LUI_OP: begin
@@ -102,6 +105,15 @@ always @(opcode or func ) begin
             ExtOp = `EXT_ZERO;
         end
 
+        // TODO: sll
+        // TODO: srl
+        // TODO: sra
+        // TODO: bne
+        // TODO: j
+        // TODO: jal
+        // TODO: jr
+        // TODO: slt
+        // TODO: slti
 
 
         default: begin
