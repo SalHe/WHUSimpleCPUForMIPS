@@ -89,7 +89,7 @@ always @(opcode or func ) begin
             // slt
             // if (rs < rt) rd=1 else rd=0
             `INSTR_SLT_FUNCT: begin
-                RegDst = `REG_MUX_SEL_RT;
+                RegDst = `REG_MUX_SEL_RD;
                 RegWrite = 1;
                 DatatoReg = `DR_MUX_SEL_ALU;
 
