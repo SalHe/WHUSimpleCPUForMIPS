@@ -20,6 +20,25 @@ always @(opcode or func ) begin
         //addu,subu
         `INSTR_RTYPE_OP:          // R type
         case (func)
+            // add
+            `INSTR_ADD_FUNCT: begin
+                RegDst = `REG_MUX_SEL_RD;  // 写入 rt。ins[20:16]
+                RegWrite = 1;
+
+                ALUSrc = `ALU_SRC_MUX_SEL_REG; // 立即数
+                ALUCtrl = `ALUOp_ADD;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = `EXT_SIGNED;
+            end
+
+
             //addu
             `INSTR_ADDU_FUNCT: begin
                 RegDst = 2'b01;
@@ -81,7 +100,6 @@ always @(opcode or func ) begin
 
         // TODO: lw
         // TODO: sw
-        // TODO: add
         // TODO: sub
         // TODO: or
         // TODO: and
@@ -91,17 +109,17 @@ always @(opcode or func ) begin
         `INSTR_LUI_OP: begin
             RegDst = `REG_MUX_SEL_RT;  // 写入 rt。ins[20:16]
             RegWrite = 1;
-            
-            ALUSrc = `ALU_SRC_MUX_SEL_EXT; // 立即数 
+
+            ALUSrc = `ALU_SRC_MUX_SEL_EXT; // 立即数
             ALUCtrl = `ALUOp_LUI;
 
             MemRead = 0;
             MemWrite = 0;
-            
+
             DatatoReg = `DR_MUX_SEL_ALU;
-            
+
             PC_sel = `PC_MUX_SEL_NEWPC;
-            
+
             ExtOp = `EXT_ZERO;
         end
 

@@ -22,6 +22,8 @@ always @(A or B or ALUOp) begin
             zero = (A == B) ? 1'b1 : 1'b0; //beq
         `ALUOp_LUI:
             C = B << 16;
+        `ALUOp_ADD:
+            C = A + B;
 
 
     endcase
