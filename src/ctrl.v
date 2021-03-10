@@ -6,6 +6,7 @@ module ctrl(
            input [5: 0] func,
            output reg [1: 0] RegDst,
            output reg ALUSrc,
+           output reg ALUSrc2,
            output reg MemRead,
            output reg RegWrite,
            output reg MemWrite,
@@ -17,7 +18,13 @@ module ctrl(
        );
 
 always @(opcode or func ) begin
+    
+    // 原有设计无法满足某些指令的需求
+    // 故对模块进行了扩展
+    // 也可能是我没找到解决方案。。。
     IsJump = 0;
+    ALUSrc2 = `ALU_SRC_MUX_SEL_REGA;
+
     case (opcode)
         //addu,subu
         `INSTR_RTYPE_OP:          // R type
@@ -104,6 +111,38 @@ always @(opcode or func ) begin
                 ExtOp = `EXT_SIGNED;
             end
 
+            // TODO HERE
+            // sll
+            // 	rd <- rt << shamt; （shamt为 imm[10..6]）
+            `INSTR_SLL_FUNCT: begin
+
+                /*
+                // Read Addr1, Read Addr2
+                
+                // 总为0？？？
+                Instrl[25: 21], // rs -> Data1
+                
+                Instrl[20: 16], // rt -> Data2
+                */
+
+                RegDst = `REG_MUX_SEL_RD;
+                RegWrite = 1;
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                // 将立即数无符号扩展传给ALU
+                // ALU选取立即数中[10..6]即可拿到shamt
+                ALUSrc = `ALU_SRC_MUX_SEL_EXT;
+                ALUSrc2 = `ALU_SRC_MUX_SEL_REGB;
+                ALUCtrl = `ALUOp_SLL;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = `EXT_ZERO;
+            end
+
         endcase //the end of the func
 
         //ori
@@ -188,7 +227,6 @@ always @(opcode or func ) begin
             ExtOp = `EXT_ZERO;
         end
 
-        // TODO: sll
         // TODO: srl
         // TODO: sra
 

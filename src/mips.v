@@ -40,6 +40,12 @@ wire [31: 0] ALUSrc_out;
 wire [4: 0] ALUCtr;
 wire [31: 0] ALU_out;
 
+// -----------
+// 扩展线
+wire ALUSrc2;
+wire [31: 0] ALUSrc_out2;
+// -----------
+
 wire [31: 0] dm_data_out;
 wire MemWrite;
 wire MemRead;
@@ -121,6 +127,7 @@ gpr GRF(
 extend EXTEND(Instrl[15: 0], ExtOp, ext_out);
 
 // ALU操作数选择器
+// Data2, Ext -> ?
 ALUSrc_mux ALUSRC(
                /* 寄存器Data2 */    grf_out_B,
                /* 符号扩展结果 */   ext_out,
@@ -128,13 +135,22 @@ ALUSrc_mux ALUSRC(
                /* 选择结果 */       ALUSrc_out
            );
 
+// Data1, Data2 -> ?
+ALUSrc_mux2 ALUSRC2(
+               /* 寄存器Data1 */    grf_out_A,
+               /* 寄存器Data2 */    grf_out_B,
+               /* ALU选择信号 */    ALUSrc2,
+               /* 选择结果 */       ALUSrc_out2
+           );
+
 // ALU
 alu ALU(
-        /* 操作数1：寄存器Data1 */          grf_out_A,
-        /* 操作数2：ALU操作数选择结果 */     ALUSrc_out,
-        /* ALU控制信号 */                   ALUCtr,
-        /* 运算结果 */                      ALU_out,
-        /* 操作数是否相等？ */              beq_zero
+        // /* 操作数1：寄存器Data1 */          grf_out_A,
+        /* 操作数1：ALU操作数选择结果(Data1, Data2) */     ALUSrc_out2,
+        /* 操作数2：ALU操作数选择结果(Data2, Ext) */       ALUSrc_out,
+        /* ALU控制信号 */                                 ALUCtr,
+        /* 运算结果 */                                    ALU_out,
+        /* 操作数是否相等？ */                            beq_zero
     );
 
 // 控制信号单元
@@ -148,6 +164,7 @@ ctrl CTRL(
          // 生成信号
          RegDst,
          ALUSrc,
+         ALUSrc2,
          MemRead,
          RegWrite,
          MemWrite,

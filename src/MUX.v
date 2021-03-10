@@ -33,6 +33,20 @@ always@(grf_out or extend_out or ALUSrc) begin
 end
 endmodule
 
+    module ALUSrc_mux2(
+        input [31: 0] grf_out,
+        input [31: 0] extend_out,
+        input ALUSrc,
+        output reg [31: 0] ALUSrc_mux_out
+    );
+
+always@(grf_out or extend_out or ALUSrc) begin
+    if (ALUSrc == 1)
+        ALUSrc_mux_out = extend_out;
+    else
+        ALUSrc_mux_out = grf_out;
+end
+endmodule
 
     module DatatoReg_mux(
         input [31: 0] ALU_data,
