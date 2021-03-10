@@ -99,8 +99,8 @@ gpr GRF(
         reset,
 
         // Read Addr1, Read Addr2
-        Instrl[25: 21], // rs
-        Instrl[20: 16], // rt
+        Instrl[25: 21], // rs -> Data1
+        Instrl[20: 16], // rt -> Data2
 
         // Write Addr
         Reg_rd,
