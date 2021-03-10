@@ -24,6 +24,8 @@ always @(A or B or ALUOp) begin
             C = B << 16;
         `ALUOp_ADD:
             C = A + B;
+        `ALUOp_SUB:
+            C = A - B;
 
 
     endcase

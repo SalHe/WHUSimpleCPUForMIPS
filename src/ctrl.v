@@ -22,7 +22,7 @@ always @(opcode or func ) begin
         case (func)
             // add
             `INSTR_ADD_FUNCT: begin
-                RegDst = `REG_MUX_SEL_RD;  // 写入 rt。ins[20:16]
+                RegDst = `REG_MUX_SEL_RD;
                 RegWrite = 1;
 
                 ALUSrc = `ALU_SRC_MUX_SEL_REG; // 立即数
@@ -32,6 +32,23 @@ always @(opcode or func ) begin
                 MemWrite = 0;
 
                 DatatoReg = `DR_MUX_SEL_ALU;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = `EXT_SIGNED;
+            end
+
+            // sub
+            `INSTR_SUB_FUNCT: begin
+                RegDst = `REG_MUX_SEL_RD;  // 写入 rt。ins[20:16]
+                RegWrite = 1;
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                ALUSrc = `ALU_SRC_MUX_SEL_REG; // 立即数
+                ALUCtrl = `ALUOp_SUB;
+
+                MemRead = 0;
+                MemWrite = 0;
 
                 PC_sel = `PC_MUX_SEL_NEWPC;
 
@@ -99,8 +116,24 @@ always @(opcode or func ) begin
         // 作业部分
 
         // TODO: lw
-        // TODO: sw
-        // TODO: sub
+
+
+        // sw
+        `INSTR_SW_OP: begin
+            RegDst = 0; 
+            RegWrite = 0;
+            DatatoReg = 0;
+
+            ALUSrc = `ALU_SRC_MUX_SEL_EXT; // offset
+            ALUCtrl = `ALUOp_ADD; // 完成 offset + base
+
+            MemRead = 0;
+            MemWrite = 1;
+
+            PC_sel = `PC_MUX_SEL_NEWPC;
+            ExtOp = `EXT_SIGNED;
+        end
+
         // TODO: or
         // TODO: and
         // TODO: addi
@@ -109,14 +142,13 @@ always @(opcode or func ) begin
         `INSTR_LUI_OP: begin
             RegDst = `REG_MUX_SEL_RT;  // 写入 rt。ins[20:16]
             RegWrite = 1;
+            DatatoReg = `DR_MUX_SEL_ALU;
 
             ALUSrc = `ALU_SRC_MUX_SEL_EXT; // 立即数
             ALUCtrl = `ALUOp_LUI;
 
             MemRead = 0;
             MemWrite = 0;
-
-            DatatoReg = `DR_MUX_SEL_ALU;
 
             PC_sel = `PC_MUX_SEL_NEWPC;
 
