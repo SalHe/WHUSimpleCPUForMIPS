@@ -4,24 +4,24 @@
 `include "ctrl_encode_def.v"
 `include "instruction_def.v"
 
-module ctrl(
-           input [5: 0] opcode,
-           input [5: 0] func,
-           output reg [1: 0] RegDst,
-           output reg ALUSrc,
-           output reg ALUSrc2,
-           output reg MemRead,
-           output reg RegWrite,
-           output reg MemWrite,
-           output reg [1: 0] DatatoReg,
-           output reg [1: 0] PC_sel,
-           output reg ExtOp,
-           output reg [4: 0] ALUCtrl,
-           output reg [1: 0] IsJump
-       );
+        module ctrl(
+            input [5: 0] opcode,
+            input [5: 0] func,
+            output reg [1: 0] RegDst,
+            output reg ALUSrc,
+            output reg ALUSrc2,
+            output reg MemRead,
+            output reg RegWrite,
+            output reg MemWrite,
+            output reg [1: 0] DatatoReg,
+            output reg [1: 0] PC_sel,
+            output reg ExtOp,
+            output reg [4: 0] ALUCtrl,
+            output reg [1: 0] IsJump
+        );
 
 always @(opcode or func ) begin
-    
+
     // 原有设计无法满足某些指令的需求
     // 故对模块进行了扩展
     // 也可能是我没找到解决方案。。。
@@ -114,17 +114,16 @@ always @(opcode or func ) begin
                 ExtOp = `EXT_SIGNED;
             end
 
-            // TODO HERE
             // sll
             // 	rd <- rt << shamt; （shamt为 imm[10..6]）
             `INSTR_SLL_FUNCT: begin
 
                 /*
                 // Read Addr1, Read Addr2
-                
+
                 // 总为0？？？
                 Instrl[25: 21], // rs -> Data1
-                
+
                 Instrl[20: 16], // rt -> Data2
                 */
 
@@ -135,8 +134,50 @@ always @(opcode or func ) begin
                 // 将立即数无符号扩展传给ALU
                 // ALU选取立即数中[10..6]即可拿到shamt
                 ALUSrc = `ALU_SRC_MUX_SEL_EXT;
-                ALUSrc2 = `ALU_SRC_MUX_SEL_REGB; 
+                ALUSrc2 = `ALU_SRC_MUX_SEL_REGB;
                 ALUCtrl = `ALUOp_SLL;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = `EXT_ZERO;
+            end
+
+            // srl
+            // 	 rd <- rt >> shamt （shamt为 imm[10..6]）
+            `INSTR_SRL_FUNCT: begin
+                RegDst = `REG_MUX_SEL_RD;
+                RegWrite = 1;
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                // 将立即数无符号扩展传给ALU
+                // ALU选取立即数中[10..6]即可拿到shamt
+                ALUSrc = `ALU_SRC_MUX_SEL_EXT;
+                ALUSrc2 = `ALU_SRC_MUX_SEL_REGB;
+                ALUCtrl = `ALUOp_SRL;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = `EXT_ZERO;
+            end
+
+            // sra
+            // 	rd <- rt >> shamt  ；(arithmetic) 注意符号位保留（shamt为 imm[10..6]）
+            `INSTR_SRA_FUNCT: begin
+                RegDst = `REG_MUX_SEL_RD;
+                RegWrite = 1;
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                // 将立即数无符号扩展传给ALU
+                // ALU选取立即数中[10..6]即可拿到shamt
+                ALUSrc = `ALU_SRC_MUX_SEL_EXT;
+                ALUSrc2 = `ALU_SRC_MUX_SEL_REGB;
+                ALUCtrl = `ALUOp_SRA;
 
                 MemRead = 0;
                 MemWrite = 0;
@@ -230,7 +271,6 @@ always @(opcode or func ) begin
             ExtOp = `EXT_ZERO;
         end
 
-        // TODO: srl
         // TODO: sra
 
 

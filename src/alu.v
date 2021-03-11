@@ -34,7 +34,11 @@ always @(A or B or ALUOp) begin
         `ALUOp_BNE: 
             zero = (A != B) ? 1'b1 : 1'b0; //bne
         `ALUOp_SLL: 
-            C = A << {{27{1'b0}}, B[10:6]};
+            C = A << B[10:6];
+        `ALUOp_SRL: 
+            C = A >> B[10:6];
+        `ALUOp_SRA: 
+            C = $signed(A) >>> B[10:6];
 
     endcase
 end
