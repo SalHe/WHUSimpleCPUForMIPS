@@ -187,6 +187,24 @@ always @(opcode or func ) begin
                 ExtOp = `EXT_ZERO;
             end
 
+            // and
+            `INSTR_AND_FUNCT: begin
+                RegDst = `REG_MUX_SEL_RD;
+                RegWrite = 1;
+
+                ALUSrc = `ALU_SRC_MUX_SEL_REG;
+                ALUCtrl = `ALUOp_AND;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = 0;
+            end
+
         endcase //the end of the func
 
         //ori
@@ -250,9 +268,23 @@ always @(opcode or func ) begin
             ExtOp = `EXT_SIGNED;
         end
 
-        // TODO: or
-        // TODO: and
-        // TODO: addi
+        // andi
+        `INSTR_ADDI_OP: begin
+            RegDst = `REG_MUX_SEL_RD;
+            RegWrite = 1;
+
+            ALUSrc = `ALU_SRC_MUX_SEL_EXT;
+            ALUCtrl = `ALUOp_AND;
+
+            MemRead = 0;
+            MemWrite = 0;
+
+            DatatoReg = `DR_MUX_SEL_ALU;
+
+            PC_sel = `PC_MUX_SEL_NEWPC;
+
+            ExtOp = 0;
+        end
 
         // lui 设置高位
         `INSTR_LUI_OP: begin
