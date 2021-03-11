@@ -17,7 +17,8 @@
             output reg [1: 0] PC_sel,
             output reg ExtOp,
             output reg [4: 0] ALUCtrl,
-            output reg [1: 0] IsJump
+            output reg [1: 0] IsJump,
+            output reg IsToStorePC
         );
 
 always @(opcode or func ) begin
@@ -26,6 +27,7 @@ always @(opcode or func ) begin
     // 故对模块进行了扩展
     // 也可能是我没找到解决方案。。。
     IsJump = 0;
+    IsToStorePC = 0;
     ALUSrc2 = `ALU_SRC_MUX_SEL_REGA;
 
     case (opcode)
@@ -321,9 +323,6 @@ always @(opcode or func ) begin
             ExtOp = `EXT_ZERO;
         end
 
-        // TODO: sra
-
-
         // bne
         // if (rs != rt) PC <- PC+4 + (sign-extend)immediate<<2
         `INSTR_BNE_OP: begin
@@ -363,7 +362,44 @@ always @(opcode or func ) begin
             IsJump = 1;
         end
 
-        // TODO: jal
+        // addi
+        `INSTR_ADDI_OP: begin
+            RegDst = `REG_MUX_SEL_RT;
+            RegWrite = 1;
+
+            ALUSrc = `ALU_SRC_MUX_SEL_EXT;
+            ALUCtrl = `ALUOp_ADD;
+
+            MemRead = 0;
+            MemWrite = 0;
+
+            DatatoReg = `DR_MUX_SEL_ALU;
+
+            PC_sel = `PC_MUX_SEL_NEWPC;
+
+            ExtOp = `EXT_SIGNED;
+        end
+
+        // jal
+        `INSTR_JAL_OP: begin
+            RegDst = 0;
+            RegWrite = 0;
+            DatatoReg = 0;
+
+            ALUSrc = 0;
+            ALUCtrl = 0;
+
+            MemRead = 0;
+            MemWrite = 0;
+
+            PC_sel = `PC_MUX_SEL_NEWPC;
+
+            ExtOp = `EXT_SIGNED;
+
+            IsJump = 1;
+            IsToStorePC = 1;
+        end
+
         // TODO: jr
 
         // slti 小于则置位(立即数)

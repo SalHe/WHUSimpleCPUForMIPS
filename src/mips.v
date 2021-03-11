@@ -11,7 +11,7 @@
 `include "npc.v"
 `include "pc.v"
 
-module mips( );
+        module mips( );
 reg clk, reset;
 
 initial begin
@@ -33,6 +33,7 @@ wire [31: 0] new_PC;
 
 wire beq_zero;
 wire IsJump;
+wire IsToStorePC;
 wire [1: 0] PC_sel;
 wire [31: 0] Instrl;
 
@@ -149,11 +150,11 @@ ALUSrc_mux ALUSRC(
 
 // Data1, Data2 -> ?
 ALUSrc_mux2 ALUSRC2(
-               /* 寄存器Data1 */    grf_out_A,
-               /* 寄存器Data2 */    grf_out_B,
-               /* ALU选择信号 */    ALUSrc2,
-               /* 选择结果 */       ALUSrc_out2
-           );
+                /* 寄存器Data1 */    grf_out_A,
+                /* 寄存器Data2 */    grf_out_B,
+                /* ALU选择信号 */    ALUSrc2,
+                /* 选择结果 */       ALUSrc_out2
+            );
 
 // ALU
 alu ALU(
@@ -184,8 +185,13 @@ ctrl CTRL(
          PC_sel,
          ExtOp,
          ALUCtr,
-         IsJump
+         IsJump,
+         IsToStorePC
      );
+
+always@(IsToStorePC) begin
+    if(IsToStorePC == 1) GRF.Gpr[31] = old_PC + 4;
+end
 
 // 内存访问模块
 dm DM(
