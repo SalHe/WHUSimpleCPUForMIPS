@@ -205,6 +205,24 @@ always @(opcode or func ) begin
                 ExtOp = 0;
             end
 
+            // or
+            `INSTR_OR_FUNCT: begin
+                RegDst = `REG_MUX_SEL_RD;
+                RegWrite = 1;
+
+                ALUSrc = `ALU_SRC_MUX_SEL_REG;
+                ALUCtrl = `ALUOp_OR;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = 0;
+            end
+
         endcase //the end of the func
 
         //ori
