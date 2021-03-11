@@ -287,7 +287,7 @@ always @(opcode or func ) begin
         end
 
         // andi
-        `INSTR_ADDI_OP: begin
+        `INSTR_ANDI_OP: begin
             RegDst = `REG_MUX_SEL_RD;
             RegWrite = 1;
 
