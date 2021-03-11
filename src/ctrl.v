@@ -1,3 +1,6 @@
+`ifndef _CTRL_V_
+`define _CTRL_V_
+
 `include "ctrl_encode_def.v"
 `include "instruction_def.v"
 
@@ -309,3 +312,5 @@ end
 
 
 endmodule
+
+`endif

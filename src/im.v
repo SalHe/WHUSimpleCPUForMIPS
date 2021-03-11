@@ -1,3 +1,5 @@
+`ifndef _IM_V_
+`define _IM_V_
 
 module im(
            input [11: 2] Addr,
@@ -10,3 +12,5 @@ reg [31: 0] IMem[1023: 0];
 assign Out = IMem[Addr];
 
 endmodule
+
+`endif

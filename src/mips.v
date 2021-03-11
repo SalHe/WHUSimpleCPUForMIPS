@@ -1,3 +1,15 @@
+`ifndef _MIPS_V_
+`define _MIPS_V_
+
+`include "alu.v"
+`include "ctrl.v"
+`include "dm.v"
+`include "extend.v"
+`include "gpr.v"
+`include "im.v"
+`include "MUX.v"
+`include "npc.v"
+`include "pc.v"
 
 module mips( );
 reg clk, reset;
@@ -189,3 +201,5 @@ dm DM(
    );
 
 endmodule
+
+`endif

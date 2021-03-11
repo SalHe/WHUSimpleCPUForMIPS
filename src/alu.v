@@ -1,4 +1,7 @@
 
+`ifndef _ALU_V_
+`define _ALU_V_
+
 `include "ctrl_encode_def.v"
 
 module alu(
@@ -42,3 +45,5 @@ endmodule
 
 
 
+
+`endif

@@ -1,3 +1,6 @@
+`ifndef _PC_V_
+`define _PC_V_
+
 module pc(
            input [31: 0] newpc,
            input clk,
@@ -29,3 +32,5 @@ end
 assign oldpc = _pc;
 
 endmodule
+
+`endif

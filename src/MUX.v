@@ -1,3 +1,5 @@
+`ifndef _MUX_V_
+`define _MUX_V_
 
 module RegDst_mux(
            input [1: 0] RegDst,
@@ -66,3 +68,5 @@ end
 
 
 endmodule
+
+`endif

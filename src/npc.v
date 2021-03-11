@@ -1,3 +1,5 @@
+`ifndef _NPC_V_
+`define _NPC_V_
 
 module npc(
            input [31: 0] oldPC,
@@ -26,3 +28,5 @@ always @(oldPC or beq_imm or beq_zero or PC_sel or Jump) begin
 end
 
 endmodule
+
+`endif
