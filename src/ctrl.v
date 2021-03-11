@@ -225,6 +225,26 @@ always @(opcode or func ) begin
                 ExtOp = 0;
             end
 
+            // jr
+            // PC <- rs
+            `INSTR_JR_FUNCT: begin
+                RegDst = 0;
+                RegWrite = 0;
+                DatatoReg = 0;
+
+                ALUSrc = 0;
+                ALUCtrl = 0;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = `EXT_SIGNED;
+
+                IsJump = 2;
+            end
+
         endcase //the end of the func
 
         //ori
@@ -399,8 +419,6 @@ always @(opcode or func ) begin
             IsJump = 1;
             IsToStorePC = 1;
         end
-
-        // TODO: jr
 
         // slti 小于则置位(立即数)
         // if (rs <(sign-extend)immediate) rt=1 else rt=0 ；

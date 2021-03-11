@@ -32,7 +32,7 @@ wire [31: 0] old_PC;
 wire [31: 0] new_PC;
 
 wire beq_zero;
-wire IsJump;
+wire [1: 0] IsJump;
 wire IsToStorePC;
 wire [1: 0] PC_sel;
 wire [31: 0] Instrl;
@@ -81,6 +81,7 @@ npc NPC(
         /* 信号 */                  beq_zero,
         /* 多路选择信号 */           PC_sel,
         /* Jump ? */                IsJump,
+        /* JR 指令... */            grf_out_A,
         /* 输出的新PC */             new_PC
     );
 
