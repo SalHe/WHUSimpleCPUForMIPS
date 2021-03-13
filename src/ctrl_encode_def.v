@@ -1,3 +1,6 @@
+`ifndef _CTRL_ENCODE_DEF_V_
+`define _CTRL_ENCODE_DEF_V_
+
 // NPC control signal
 `define NPC_PLUS4   2'b00
 `define NPC_BRANCH  2'b01
@@ -60,8 +63,13 @@
 `define ALU_SRC_MUX_SEL_REG 2'b00
 `define ALU_SRC_MUX_SEL_EXT 2'b01
 
+`define ALU_SRC_MUX_SEL_REGA 2'b00
+`define ALU_SRC_MUX_SEL_REGB 2'b01
+
 `define PC_MUX_SEL_NEWPC  2'b00
 `define PC_MUX_SEL_BRANCH 2'b01
 
 `define DR_MUX_SEL_ALU 2'b00
 `define DR_MUX_SEL_MEM 2'b01
+
+`endif

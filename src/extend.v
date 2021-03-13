@@ -1,3 +1,5 @@
+`ifndef _EXTEND_V_
+`define _EXTEND_V_
 
 module extend(
            input [15: 0] in,
@@ -13,3 +15,5 @@ always@(in or ExtOp) begin
 end
 
 endmodule
+
+`endif

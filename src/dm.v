@@ -1,3 +1,6 @@
+`ifndef _DM_V_
+`define _DM_V_
+
 module dm(
            input [31: 0] addr,
            input [31: 0] data_in,
@@ -23,3 +26,5 @@ assign data_out = DMem[addr];
 
 
 endmodule
+
+`endif

@@ -1,23 +1,35 @@
+`ifndef _CTRL_V_
+`define _CTRL_V_
+
 `include "ctrl_encode_def.v"
 `include "instruction_def.v"
 
-module ctrl(
-           input [5: 0] opcode,
-           input [5: 0] func,
-           output reg [1: 0] RegDst,
-           output reg ALUSrc,
-           output reg MemRead,
-           output reg RegWrite,
-           output reg MemWrite,
-           output reg [1: 0] DatatoReg,
-           output reg [1: 0] PC_sel,
-           output reg ExtOp,
-           output reg [4: 0] ALUCtrl,
-           output reg [1: 0] IsJump
-       );
+        module ctrl(
+            input [5: 0] opcode,
+            input [5: 0] func,
+            output reg [1: 0] RegDst,
+            output reg ALUSrc,
+            output reg ALUSrc2,
+            output reg MemRead,
+            output reg RegWrite,
+            output reg MemWrite,
+            output reg [1: 0] DatatoReg,
+            output reg [1: 0] PC_sel,
+            output reg ExtOp,
+            output reg [4: 0] ALUCtrl,
+            output reg [1: 0] IsJump,
+            output reg IsToStorePC
+        );
 
 always @(opcode or func ) begin
+
+    // 原有设计无法满足某些指令的需求
+    // 故对模块进行了扩展
+    // 也可能是我没找到解决方案。。。
     IsJump = 0;
+    IsToStorePC = 0;
+    ALUSrc2 = `ALU_SRC_MUX_SEL_REGA;
+
     case (opcode)
         //addu,subu
         `INSTR_RTYPE_OP:          // R type
@@ -104,6 +116,135 @@ always @(opcode or func ) begin
                 ExtOp = `EXT_SIGNED;
             end
 
+            // sll
+            // 	rd <- rt << shamt; （shamt为 imm[10..6]）
+            `INSTR_SLL_FUNCT: begin
+
+                /*
+                // Read Addr1, Read Addr2
+
+                // 总为0？？？
+                Instrl[25: 21], // rs -> Data1
+
+                Instrl[20: 16], // rt -> Data2
+                */
+
+                RegDst = `REG_MUX_SEL_RD;
+                RegWrite = 1;
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                // 将立即数无符号扩展传给ALU
+                // ALU选取立即数中[10..6]即可拿到shamt
+                ALUSrc = `ALU_SRC_MUX_SEL_EXT;
+                ALUSrc2 = `ALU_SRC_MUX_SEL_REGB;
+                ALUCtrl = `ALUOp_SLL;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = `EXT_ZERO;
+            end
+
+            // srl
+            // 	 rd <- rt >> shamt （shamt为 imm[10..6]）
+            `INSTR_SRL_FUNCT: begin
+                RegDst = `REG_MUX_SEL_RD;
+                RegWrite = 1;
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                // 将立即数无符号扩展传给ALU
+                // ALU选取立即数中[10..6]即可拿到shamt
+                ALUSrc = `ALU_SRC_MUX_SEL_EXT;
+                ALUSrc2 = `ALU_SRC_MUX_SEL_REGB;
+                ALUCtrl = `ALUOp_SRL;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = `EXT_ZERO;
+            end
+
+            // sra
+            // 	rd <- rt >> shamt  ；(arithmetic) 注意符号位保留（shamt为 imm[10..6]）
+            `INSTR_SRA_FUNCT: begin
+                RegDst = `REG_MUX_SEL_RD;
+                RegWrite = 1;
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                // 将立即数无符号扩展传给ALU
+                // ALU选取立即数中[10..6]即可拿到shamt
+                ALUSrc = `ALU_SRC_MUX_SEL_EXT;
+                ALUSrc2 = `ALU_SRC_MUX_SEL_REGB;
+                ALUCtrl = `ALUOp_SRA;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = `EXT_ZERO;
+            end
+
+            // and
+            `INSTR_AND_FUNCT: begin
+                RegDst = `REG_MUX_SEL_RD;
+                RegWrite = 1;
+
+                ALUSrc = `ALU_SRC_MUX_SEL_REG;
+                ALUCtrl = `ALUOp_AND;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = 0;
+            end
+
+            // or
+            `INSTR_OR_FUNCT: begin
+                RegDst = `REG_MUX_SEL_RD;
+                RegWrite = 1;
+
+                ALUSrc = `ALU_SRC_MUX_SEL_REG;
+                ALUCtrl = `ALUOp_OR;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                DatatoReg = `DR_MUX_SEL_ALU;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = 0;
+            end
+
+            // jr
+            // PC <- rs
+            `INSTR_JR_FUNCT: begin
+                RegDst = 0;
+                RegWrite = 0;
+                DatatoReg = 0;
+
+                ALUSrc = 0;
+                ALUCtrl = 0;
+
+                MemRead = 0;
+                MemWrite = 0;
+
+                PC_sel = `PC_MUX_SEL_NEWPC;
+
+                ExtOp = `EXT_SIGNED;
+
+                IsJump = 2;
+            end
+
         endcase //the end of the func
 
         //ori
@@ -167,9 +308,23 @@ always @(opcode or func ) begin
             ExtOp = `EXT_SIGNED;
         end
 
-        // TODO: or
-        // TODO: and
-        // TODO: addi
+        // andi
+        `INSTR_ANDI_OP: begin
+            RegDst = `REG_MUX_SEL_RD;
+            RegWrite = 1;
+
+            ALUSrc = `ALU_SRC_MUX_SEL_EXT;
+            ALUCtrl = `ALUOp_AND;
+
+            MemRead = 0;
+            MemWrite = 0;
+
+            DatatoReg = `DR_MUX_SEL_ALU;
+
+            PC_sel = `PC_MUX_SEL_NEWPC;
+
+            ExtOp = 0;
+        end
 
         // lui 设置高位
         `INSTR_LUI_OP: begin
@@ -187,11 +342,6 @@ always @(opcode or func ) begin
 
             ExtOp = `EXT_ZERO;
         end
-
-        // TODO: sll
-        // TODO: srl
-        // TODO: sra
-
 
         // bne
         // if (rs != rt) PC <- PC+4 + (sign-extend)immediate<<2
@@ -232,8 +382,43 @@ always @(opcode or func ) begin
             IsJump = 1;
         end
 
-        // TODO: jal
-        // TODO: jr
+        // addi
+        `INSTR_ADDI_OP: begin
+            RegDst = `REG_MUX_SEL_RT;
+            RegWrite = 1;
+
+            ALUSrc = `ALU_SRC_MUX_SEL_EXT;
+            ALUCtrl = `ALUOp_ADD;
+
+            MemRead = 0;
+            MemWrite = 0;
+
+            DatatoReg = `DR_MUX_SEL_ALU;
+
+            PC_sel = `PC_MUX_SEL_NEWPC;
+
+            ExtOp = `EXT_SIGNED;
+        end
+
+        // jal
+        `INSTR_JAL_OP: begin
+            RegDst = 0;
+            RegWrite = 0;
+            DatatoReg = 0;
+
+            ALUSrc = 0;
+            ALUCtrl = 0;
+
+            MemRead = 0;
+            MemWrite = 0;
+
+            PC_sel = `PC_MUX_SEL_NEWPC;
+
+            ExtOp = `EXT_SIGNED;
+
+            IsJump = 1;
+            IsToStorePC = 1;
+        end
 
         // slti 小于则置位(立即数)
         // if (rs <(sign-extend)immediate) rt=1 else rt=0 ；
@@ -271,3 +456,5 @@ end
 
 
 endmodule
+
+`endif

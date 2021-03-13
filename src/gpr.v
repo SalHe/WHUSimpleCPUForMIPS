@@ -1,3 +1,5 @@
+`ifndef _GPR_V_
+`define _GPR_V_
 
 module gpr(
            input clk,
@@ -32,3 +34,5 @@ assign outa = (rs == 0) ? 0 : Gpr[rs];
 assign outb = (rt == 0) ? 0 : Gpr[rt];
 
 endmodule
+
+`endif
