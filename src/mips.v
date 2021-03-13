@@ -1,5 +1,17 @@
+`ifndef _MIPS_V_
+`define _MIPS_V_
 
-module mips( );
+`include "alu.v"
+`include "ctrl.v"
+`include "dm.v"
+`include "extend.v"
+`include "gpr.v"
+`include "im.v"
+`include "MUX.v"
+`include "npc.v"
+`include "pc.v"
+
+        module mips( );
 reg clk, reset;
 
 initial begin
@@ -20,7 +32,8 @@ wire [31: 0] old_PC;
 wire [31: 0] new_PC;
 
 wire beq_zero;
-wire IsJump;
+wire [1: 0] IsJump;
+wire IsToStorePC;
 wire [1: 0] PC_sel;
 wire [31: 0] Instrl;
 
@@ -39,6 +52,12 @@ wire ALUSrc;
 wire [31: 0] ALUSrc_out;
 wire [4: 0] ALUCtr;
 wire [31: 0] ALU_out;
+
+// -----------
+// 扩展线
+wire ALUSrc2;
+wire [31: 0] ALUSrc_out2;
+// -----------
 
 wire [31: 0] dm_data_out;
 wire MemWrite;
@@ -62,6 +81,7 @@ npc NPC(
         /* 信号 */                  beq_zero,
         /* 多路选择信号 */           PC_sel,
         /* Jump ? */                IsJump,
+        /* JR 指令... */            grf_out_A,
         /* 输出的新PC */             new_PC
     );
 
@@ -121,6 +141,7 @@ gpr GRF(
 extend EXTEND(Instrl[15: 0], ExtOp, ext_out);
 
 // ALU操作数选择器
+// Data2, Ext -> ?
 ALUSrc_mux ALUSRC(
                /* 寄存器Data2 */    grf_out_B,
                /* 符号扩展结果 */   ext_out,
@@ -128,13 +149,22 @@ ALUSrc_mux ALUSRC(
                /* 选择结果 */       ALUSrc_out
            );
 
+// Data1, Data2 -> ?
+ALUSrc_mux2 ALUSRC2(
+                /* 寄存器Data1 */    grf_out_A,
+                /* 寄存器Data2 */    grf_out_B,
+                /* ALU选择信号 */    ALUSrc2,
+                /* 选择结果 */       ALUSrc_out2
+            );
+
 // ALU
 alu ALU(
-        /* 操作数1：寄存器Data1 */          grf_out_A,
-        /* 操作数2：ALU操作数选择结果 */     ALUSrc_out,
-        /* ALU控制信号 */                   ALUCtr,
-        /* 运算结果 */                      ALU_out,
-        /* 操作数是否相等？ */              beq_zero
+        // /* 操作数1：寄存器Data1 */          grf_out_A,
+        /* 操作数1：ALU操作数选择结果(Data1, Data2) */     ALUSrc_out2,
+        /* 操作数2：ALU操作数选择结果(Data2, Ext) */       ALUSrc_out,
+        /* ALU控制信号 */                                 ALUCtr,
+        /* 运算结果 */                                    ALU_out,
+        /* 操作数是否相等？ */                            beq_zero
     );
 
 // 控制信号单元
@@ -148,6 +178,7 @@ ctrl CTRL(
          // 生成信号
          RegDst,
          ALUSrc,
+         ALUSrc2,
          MemRead,
          RegWrite,
          MemWrite,
@@ -155,8 +186,13 @@ ctrl CTRL(
          PC_sel,
          ExtOp,
          ALUCtr,
-         IsJump
+         IsJump,
+         IsToStorePC
      );
+
+always@(IsToStorePC) begin
+    if(IsToStorePC == 1) GRF.Gpr[31] = old_PC + 4;
+end
 
 // 内存访问模块
 dm DM(
@@ -172,3 +208,5 @@ dm DM(
    );
 
 endmodule
+
+`endif

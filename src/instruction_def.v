@@ -1,3 +1,6 @@
+`ifndef _INSTRUCTION_DEF_V_
+`define _INSTRUCTION_DEF_V_
+
 // OP
 `define INSTR_RTYPE_OP      6'b000000
 
@@ -54,3 +57,5 @@
 `define INSTR_BLTZ_RT       5'b00000
 
 
+
+`endif
