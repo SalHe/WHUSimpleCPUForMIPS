@@ -2,6 +2,10 @@
 
 本项目为《WHU-计算组成原理实验设计课程》作业
 
+**本仓库已废弃！！！！**
+
+代码已经完全进行重写，见[新仓库](https://github.com/SalHe/mips-cpu)
+
 ## 目录
 
 - src
@@ -21,6 +25,10 @@
 
   用于存放所使用到的相关工具。
 
+
+## See also
+
+- [新仓库](https://github.com/SalHe/mips-cpu)
 
 ## 特别声明
 
